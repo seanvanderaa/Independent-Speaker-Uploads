@@ -17,7 +17,7 @@ def inject_files():
     # All data here is placeholder used to test and build out the pages. These will need to be replaced.
 
     # Processing is for after a user has submitted a file. Changing the truth value will change what's displayed in the sidebar.
-    processing_on = False
+    processing_on = True
     processing = [
         {"filename": "Date Uploaded"},
     ]
@@ -30,29 +30,29 @@ def inject_files():
 @app.route("/")
 def index():
     # Default landing page
-    return render_template("landing.html", partial="partials/_landing_add.html")
+    return render_template("iu_landing.html", partial="partials/_landing_add.html")
 
 @app.route("/path")
 def landing_path():
     # Route to select private/public upload
-    return render_template("landing.html", partial="partials/_landing_path.html")
+    return render_template("iu_landing.html", partial="partials/_landing_path.html")
 
-@app.route("/source/add/pub")
+@app.route("/iu-source/add/pub")
 def landing_source_add_pub():
     # Public route
-    return render_template("landing.html", partial="partials/_landing_source_add_pub.html")
+    return render_template("iu_landing.html", partial="partials/_landing_source_add_pub.html")
 
-@app.route("/source/add/priv")
+@app.route("/iu-source/add/priv")
 def landing_source_add_priv():
     # Private route
-    return render_template("landing.html", partial="partials/_landing_source_add_priv.html")
+    return render_template("iu_landing.html", partial="partials/_landing_source_add_priv.html")
 
-@app.route("/process-upload", methods=["GET","POST"])
-def process_upload():
+@app.route("/iu-process-upload", methods=["GET","POST"])
+def iu_process_upload():
     ### Take in the inputs from the form here. This is where we can process the file and begin the processing steps.
-    return render_template("landing.html", partial="partials/_landing_add.html")
+    return render_template("iu_landing.html", partial="partials/_landing_add.html")
 
-@app.route('/source-view')
+@app.route('/iu-source-view')
 def source_view():
     active_file = request.args.get('file', '')
 
@@ -99,11 +99,11 @@ def source_view():
         }
     ]
 
-    public = False
+    public = True
     speakers_verified = True #Use this to toggle on/off the verify speaker popup modal
 
     if speakers_verified:
-        return render_template('source.html',
+        return render_template('iu_source.html',
                             partial_summary="partials/_source_summary.html",
                             partial_profile="partials/_source_profile.html",
                             profiles=profiles,
@@ -112,7 +112,7 @@ def source_view():
                             speakers_verified = speakers_verified,
                             active_file=active_file)
     else:
-        return render_template('source.html',
+        return render_template('iu_source.html',
                             partial_summary="partials/_source_summary.html",
                             partial_profile="partials/_source_profile.html",
                             partial_verify="partials/_source_verify_speakers.html",

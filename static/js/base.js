@@ -16,7 +16,7 @@ document.addEventListener('DOMContentLoaded', function() {
           window.location.href = '/';
         } else {
           // Redirect to the /source-view endpoint with the filename as a parameter
-          window.location.href = `/source-view?file=${encodeURIComponent(fileName)}`;
+          window.location.href = `/iu-source-view?file=${encodeURIComponent(fileName)}`;
         }
       });
     });
