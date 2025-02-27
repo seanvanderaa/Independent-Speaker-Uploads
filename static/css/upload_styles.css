@@ -1,0 +1,48 @@
+main {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    padding: 2rem;
+    column-gap: 2rem;
+    background-color: white;
+}
+
+#file-upload-wrapper {
+    background-color: var(--light-blue-background);
+    padding: 2em;
+    border-radius: 10px;
+    border: 1px solid red;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+#file-upload-form {
+    border: 1px solid red;
+    box-sizing: border-box;
+}
+
+#file-upload-wrapper p, #file-upload-wrapper h2, #file-upload-wrapper h3 {
+    color: var(--d-blue);
+    text-align: center;
+}
+
+#dropArea {
+    border: 2px dashed #ccc;
+    padding: 20px;
+    cursor: pointer;
+    margin: 20px 0;
+    width: 100%;
+}
+
+#dropArea button {
+    border: 1px solid var(--border-grey);
+    padding: 8px 16px;
+    border-radius: 5px;
+    color: black;
+    background-color: white;
+    font-family: var(--ff);
+}
+
+#dropArea.hover {
+    border-color: #3399ff;
+}

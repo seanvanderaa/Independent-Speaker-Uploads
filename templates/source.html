@@ -1,0 +1,121 @@
+{% extends "base.html" %}
+
+{% block title %}
+  File Name
+{% endblock %}
+
+{% block extra_head %}
+  <!-- Page-specific stylesheet -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/source_styles.css') }}"/>
+{% endblock %}
+
+{% block content %}
+
+<main style="width: 100%;">
+  <!-- This is the modal to verify the speakers. -->
+  {% if partial_verify %}
+    {% include partial_verify %}
+  {% endif %}
+  <div id="section-wrapper">
+    <!-- Transcript -->
+    <section id="transcript-section">
+      <div id="transcript-header-search" class="align-left" style="margin-top: 8px;">
+        <h3 style="margin: 0px; flex: 1.4;">Source Transcript</h3>
+        <form action="" style="flex: 1.6; box-sizing: inline-block;">
+          <input type="text" placeholder="Search the transcript" style="width: 100%">
+        </form>
+      </div>
+      <div id="transcript-wrapper">
+        <div class="transcript-chunk">
+          <div class="transcript-chunk-info">
+            <p class="transcript-speaker" style="margin-top: 0px;">Donald Trump Jr.</p>
+            <p class="transcript-timestamp"><i>0:00 - 1:23</i></p>
+          </div>
+          <div class="transcript-text">
+            <p style="margin-top: 0px;">Lorem ipsum dolor sit amet consectetur. Volutpat sagittis pellentesque feugiat pretium mi mattis id fringilla. Magnis ultrices bibendum dictumst sem amet aliquam nulla maecenas erat. Enim scelerisque felis orci aliquam semper. Volutpat duis imperdiet nec non enim pellentesque et. Sit consectetur rutrum sit a aliquet. Venenatis in elit dolor quis at euismod sed.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- Analysis part—summary, speakers, etc. -->
+    <section id="analysis-section">
+      <div id="analysis-header" class="align-left">
+        <div id="tab-wrapper">
+          <div class="tab active align-center" id="summary-tab">
+            <p id="file-breakdown">File Breakdown</p>
+          </div>
+          {% for profile in profiles %}
+          <div class="tab align-center" data-name="{{ profile.name }}">
+            <p id="greg-abbott"><i class="bi bi-person-fill" style="margin-right: 8px"></i>{{ profile.name }}</p>
+          </div>
+          {% endfor %}
+        </div>
+        {% if public %}
+        <button id="view-source-btn" class="subtle-btn align-center"><i class="bi bi-arrow-up-right" style="margin-right: 8px"></i>View Source</button>
+        {% endif %}
+      </div>
+      <div id="summary-wrapper">
+          <p style="font-size: 14px; color: var(--subtle-text); margin: 0px; margin-top: 16px; margin-bottom: 8px;">Upload Date</p>
+          <h3 style="margin: 0px;">{{ active_file }}</h3>
+          <div class="summary-section">
+              <h4>Summary</h4>
+              <p>Lorem ipsum dolor sit amet consectetur. Volutpat sagittis pellentesque feugiat pretium mi mattis id fringilla. Magnis ultrices bibendum dictumst sem amet aliquam nulla maecenas erat. Enim scelerisque felis orci aliquam semper. Volutpat duis imperdiet nec non enim pellentesque et. Sit consectetur rutrum sit a aliquet. Venenatis in elit dolor quis at euismod sed.</p>
+              <p>Lorem ipsum dolor sit amet consectetur. Volutpat sagittis pellentesque feugiat pretium mi mattis id fringilla. Magnis ultrices bibendum dictumst sem amet aliquam nulla maecenas erat. Enim scelerisque felis orci aliquam semper. Volutpat duis imperdiet nec non enim pellentesque et. Sit consectetur rutrum sit a aliquet. Venenatis in elit dolor quis at euismod sed.</p>
+              <p>Lorem ipsum dolor sit amet consectetur. Volutpat sagittis pellentesque feugiat pretium mi mattis id fringilla. Magnis ultrices bibendum dictumst sem amet aliquam nulla maecenas erat. Enim scelerisque felis orci aliquam semper. Volutpat duis imperdiet nec non enim pellentesque et. Sit consectetur rutrum sit a aliquet. Venenatis in elit dolor quis at euismod sed.</p>
+          </div>
+          <div class="summary-section">
+              <h4>Speaker Time Breakdown</h4>
+              <div id="speaker-time-wrapper"></div>
+          </div>
+      </div>
+      {% for profile in profiles %}
+      <div id="{{ profile.name }}" class="speaker-wrapper" style="display: none">
+        <button class="speaker-href subtle-btn align-center" href=""><i class="bi bi-arrow-up-right" style="margin-right: 8px"></i>View {{ profile.name }}'s Profile <span>{{ profile.sources }} sources, {{ profile.subjects }} subjects, {{ profile.claims }} claims</span></button>
+        {% for subject in subjects %}
+        <div class="subject-wrapper">
+          <div class="subject-timestamps-wrapper">
+            <p style="font-size: 14px; font-weight: 400;">Discussed</p>
+            {% for timestamp in subject.timestamps %}
+              <p style="margin: 0px">{{ timestamp }}</p>
+            {% endfor %}
+          </div>
+          <h4>{{ subject.title }}</h4>
+          <p style="margin-bottom: 24px;">{{ subject.summary }}</p>
+          <p style="margin: 0px; font-size: 12px; font-weight: 500">CLAIMS</p>
+          {% for claim in subject.claims %}
+          <div class="claim-wrapper">
+            <div class="claim-content-wrapper">
+              <p class="claim">"{{ claim.claim }}"</p>
+              <p class="assertion">{{ claim.assertion }}</p>
+            </div>
+            <div class="timestamp">
+              <i>{{ claim.timestamp }}</i>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+        {% endfor %}
+      </div>
+      {% endfor %}
+    </section>
+  </div>
+
+  <!-- Only add in an audio file if the source is "private" -->
+  {% if not public %}
+  <div id="audio-player">
+    <audio controls>
+      <source src="{{ audio_file_url }}" type="audio/mpeg">
+      Your browser does not support the audio element.
+    </audio>
+  </div>
+  
+  {% endif %}
+
+</main>
+
+{% endblock %}
+
+{% block script %}
+  {{ super() }}
+  <script src="{{ url_for('static', filename='js/source.js') }}"></script>
+{% endblock %}

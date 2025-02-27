@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>{% block title %}Independent Speaker Uploads{% endblock %}</title>
+
+  <!-- Bootstrap 5 CSS -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" integrity="sha384-ENjdO4Dr2bkBIFxQpe6mS0owvBO3WF9c9usZ3nDgBBSfYtZ0Z+zCt9B9T/y/lP3y" crossorigin="anonymous"/>
+
+  <!-- Global Stylesheet -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}"/>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
+
+  {% block extra_head %}{% endblock %}
+</head>
+<body>
+  <div id="layoutContainer">
+    <div id="toggle-btn-div" class="toggle-sidebar-closed" style="display: none;">
+      <button type="button" onclick="toggleSidebar()" aria-label="Toggle sidebar" id="toggle-btn-closed">
+      <i class="bi bi-layout-sidebar-inset" style="font-size: 20px;"></i>
+      </button>
+    </div>
+    <!-- Sidebar (Navigation / Files List) -->
+    <nav id="sidebar" class="bg-light border-end" aria-label="Sidebar Navigation" style="position: relative;">
+      <!-- Toggle Button -->
+      <div id="toggle-btn-div">
+        <button type="button" onclick="toggleSidebar()" aria-label="Toggle sidebar" id="toggle-btn">
+        <i class="bi bi-layout-sidebar-inset-reverse" style="font-size: 20px;"></i>
+        </button>
+      </div>
+      <div style="min-width: 230px;">
+        <!-- This button should route to "/" on Parser -->
+        <div id="back-btn" class="align-center">
+          <p style="margin: 0px; font-size: 14px;"><i class="bi bi-arrow-left" style="margin-right: 12px;"></i>Back to the Database</p>
+        </div>      
+        <!-- Sidebar Content -->
+        <form action="/path" method="get">
+          <button id="new-file-btn">+ Upload a File</button>
+        </form>
+        {% if processing %}
+        <div id="processing-uploads" class="align-left">
+          <h4 class="mini-text" style="width: 100%;">Processing ({{ processing|length }})</h4>
+          {% for file in processing %}
+            <div class="processing-upload" 
+                 data-filename="{{ file.filename }}">
+              {{ file.filename }}
+              <div class="loading-container">
+                <div class="loading-bar" id="loadingBar"></div>
+              </div>
+              <p style="font-size: 12px; margin: 0px;"><i>Transcribing & identifying speakers...</i></p>
+            </div>
+          {% endfor %}
+        </div>      
+        {% endif %}
+        <div id="previous-uploads" class="align-left">
+          <h4 class="mini-text" style="width: 100%;">Your Recent Uploads</h4>
+          {% for file in files %}
+            <div class="prev-upload {% if active_file == file.filename %}active{% endif %}" 
+                 data-filename="{{ file.filename }}">
+              {{ file.filename }}
+              <p class="upload-profiles"><i>{{ file.profiles }}</i></p>
+              <div class="upload-date">Uploaded {{ file.upload_date }}</div>
+            </div>
+          {% endfor %}
+        </div>        
+      </div>
+
+    </nav>
+
+    <!-- Main Content (child templates inject their content here) -->
+      {% block content %}{% endblock %}
+  </div>
+
+  <!-- Bootstrap 5 JS, from ChatGPT and may need to be updated -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+BXBGU2G2SZu5BEmHOeVyh9q0bIxV" crossorigin="anonymous"></script>
+
+  {% block script %}
+    <script src="{{ url_for('static', filename='js/base.js') }}"></script>
+  {% endblock %}
+</body>
+</html>

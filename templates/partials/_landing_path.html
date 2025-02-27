@@ -1,0 +1,25 @@
+{% extends "partials/_landing_partial_base.html" %}
+
+<!-- This either sends the user to the public or the private upload route -->
+
+{% block landing_content %}
+  <h2>Audio Upload</h2>
+  <p>Is there a publicly accessible link for this audio?</p>
+  <div id="paths-wrapper">
+    <div class="path-wrapper align-center">
+        <p style="font-weight: 600; font-size: 20px">YES.</p>
+        <p>This audio is publicly available and unaltered on a platform like YouTube or Facebook.</p>
+        <form action="/source/add/pub" method="get">
+            <button class="path-btn">Upload Here</button>
+        </form>
+      </div>
+      <div class="path-wrapper align-center">
+        <p style="font-weight: 600; font-size: 20px">NO.</p>
+        <p>This audio is from a private archive and is not currently visible to the public.</p>
+        <form action="/source/add/priv" method="get">
+            <button class="path-btn">Upload Here</button>
+          </form>
+      </div>
+  </div>
+  <p style="text-align: center; margin-top: 36px; max-width: 400px; font-size: 14px;"><i><span style="font-weight: 600;">Please note:</span> Once uploaded, the contents of this file will be accessible to all Parser users.</i></p>
+{% endblock %}

@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block extra_head %}
+  <!-- Page-specific stylesheet -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/landing_styles.css') }}">
+{% endblock %}
+
+{% block content %}
+<main style="height: 100%; width: 100%;">
+  <div id="landing-center-modal" class="align-center">
+    {% if partial %}
+      {% include partial %}
+    {% else %}
+      {% include '_landing_add.html' %}
+    {% endif %}
+  </div>
+</main>
+{% endblock %}

@@ -1,0 +1,248 @@
+{% extends "partials/_landing_partial_base.html" %}
+
+<!-- See public .html for explanations. This is all the same for the most part. -->
+
+{% block landing_content %}
+<h3>Upload an Audio File: Private</h3>
+<p>For best results, make sure the audio is high quality and doesn’t contain background noise. <b>Please remember, </b>any uploaded files are made public to all users of Parser.</p>
+<div id="file-upload-wrapper" style="max-width: 500px; margin: 0 auto;">
+    <form id="file-upload-form" action="/process-upload" method="POST" enctype="multipart/form-data">
+        <input type="file" id="audioFile" name="audioFile" style="display: none;" accept=".mp3, .mp4a"/>
+        <div id="dropArea" ondragover="handleDragOver(event)" ondragleave="handleDragLeave(event)" ondrop="handleDrop(event)">
+            <i class="bi bi-file-earmark-arrow-up" style="font-size: 24px;"></i>
+            <p>Drag and drop or select a file to upload.</p>
+            <button class="blank-border-btn" type="button" onclick="openFileDialog()" style="max-width: 120px;">Select a File</button>
+        </div>
+        <div class="form-entry-field align-left"  style="margin-top: 36px;">
+          <label for="publish-date" style="display: block; margin-bottom: 5px;">
+              Original Publish Date
+              <span style="font-size: 12px; margin-left: 16px; color: var(--subtle-blue)">Required.</span>
+          </label>
+          <input type="date" id="publish-date" name="publish-date" required />
+        </div>
+        <div class="form-entry-field align-left">
+            <label for="original_source" style="display: block; margin-bottom: 5px;">Brief File Description
+              <span style="font-size: 12px; margin-left: 16px; color: var(--subtle-blue)">Required.</span>
+            </label>
+            <textarea id="original_source" name="original_source" placeholder="This is a handheld recording of the Texas Legislative session..." required rows="4" cols="50"></textarea>
+        </div>
+        <div class="form-entry-field align-left">
+            <label style="display: block; margin-bottom: 5px;">
+              Select Speakers of Interest
+              <span style="font-size: 12px; margin-left: 16px; color: var(--subtle-blue)">
+                Not required, but boosts accuracy.
+              </span>
+            </label>
+
+            <!-- New clickable div that acts like an 'input' for speaker selection -->
+            <div id="selected-speakers-display" class="speakers-display" tabindex="0" role="button" 
+                 aria-label="Select speakers of interest" style="font-size: 14px;">
+                <!-- Blocks appear here after the modal is closed -->
+                Click to add
+            </div>
+
+            <!-- Hidden input for form submission -->
+            <input type="hidden" id="selected_speakers" name="selected_speakers" />
+        </div>
+
+        <div id="source-add-btn-wrapper">
+            <button class="cancel-btn" type="button" onclick="window.history.back()">Back</button>
+            <button class="proceed-btn" type="submit">Proceed</button>
+        </div>
+    </form>
+</div>
+
+<!-- Modal -->
+<div id="modal" class="modal-overlay">
+    <div class="modal-content">
+        <span id="modal-close" class="modal-close">&times;</span>
+
+        <!-- Container that shows selected names while inside the modal -->
+        <div id="modal-selected-names-container" class="selected-names-container align-center"></div>
+
+        <input type="text" id="modal-search-input" class="modal-search" placeholder="Search names...">
+
+        <div id="name-list" class="name-list">
+            <!-- The list of names will be populated here -->
+        </div>
+        <button id="close-modal-btn" class="cancel-btn" style="margin-top: 24px;">Save</button>
+    </div>
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+
+    /* ===============================
+     * File Drag-and-Drop and Upload
+     * =============================== */
+    window.openFileDialog = function() {
+      document.getElementById("audioFile").click();
+    };
+
+    window.handleDragOver = function(event) {
+      event.preventDefault();
+      event.currentTarget.classList.add('hover');
+    };
+
+    window.handleDragLeave = function(event) {
+      event.currentTarget.classList.remove('hover');
+    };
+
+    window.handleDrop = function(event) {
+      event.preventDefault();
+      event.currentTarget.classList.remove('hover');
+      const files = event.dataTransfer.files;
+      document.getElementById("audioFile").files = files;
+    };
+
+    /* ===============================
+     * Speaker Selection Modal
+     * =============================== */
+
+    // Example list of names
+    const names = [
+      "Alice", "Bob", "Charlie", "Diana", "Eve",
+      "Frank", "Grace", "Heidi", "Ivan", "Judy",
+      "Karl", "Laura"
+    ];
+
+    let selectedNames = []; // Keep track of all selected speakers
+
+    const modal = document.getElementById('modal');
+    const modalClose = document.getElementById('modal-close');
+    const modalSearchInput = document.getElementById('modal-search-input');
+    const nameList = document.getElementById('name-list');
+    const closeModalBtn = document.getElementById('close-modal-btn');
+
+    // Outside display
+    const outsideDisplayDiv = document.getElementById('selected-speakers-display');
+    // Hidden input for form submission
+    const hiddenInput = document.getElementById('selected_speakers');
+
+    // Inside modal container
+    const modalSelectedNamesContainer = document.getElementById('modal-selected-names-container');
+
+    // Open modal when the "outside display" is clicked
+    outsideDisplayDiv.addEventListener('click', openModal);
+    modalClose.addEventListener('click', closeModal);
+    closeModalBtn.addEventListener('click', closeModal);
+
+
+
+    // Close modal if user clicks on the overlay (outside the modal-content)
+    modal.addEventListener('click', (e) => {
+      if (e.target === modal) {
+        closeModal();
+      }
+    });
+
+    function openModal() {
+      modal.classList.add('active');
+      modalSearchInput.value = '';
+      renderNameList(names);
+      // Render current selections in modal
+      renderSelectedNames(modalSelectedNamesContainer, true);
+      modalSearchInput.focus();
+    }
+
+    function closeModal() {
+      modal.classList.remove('active');
+      // When closing, render the selected names in the outside display
+      renderSelectedNames(outsideDisplayDiv, false);
+      // Update hidden input
+      updateHiddenInput();
+    }
+
+    function renderNameList(filteredNames) {
+      nameList.innerHTML = '';
+      if (filteredNames.length === 0) {
+        nameList.innerHTML = '<div>No results found</div>';
+        return;
+      }
+      filteredNames.forEach(name => {
+        const div = document.createElement('div');
+        div.className = 'name-item';
+        div.textContent = name;
+        div.addEventListener('click', () => {
+          addSelectedName(name);
+        });
+        nameList.appendChild(div);
+      });
+    }
+
+    // Filter names as user types
+    modalSearchInput.addEventListener('input', () => {
+      const query = modalSearchInput.value.toLowerCase();
+      const filtered = names.filter(name => name.toLowerCase().includes(query));
+      renderNameList(filtered);
+    });
+
+    // Add name to selected array if not already present
+    function addSelectedName(name) {
+      if (!selectedNames.includes(name)) {
+        selectedNames.push(name);
+        renderSelectedNames(modalSelectedNamesContainer, true);
+      }
+    }
+
+    // Remove a name from selected array
+    function removeSelectedName(name) {
+      selectedNames = selectedNames.filter(n => n !== name);
+      // Re-render both places if modal is open
+      if (modal.classList.contains('active')) {
+        renderSelectedNames(modalSelectedNamesContainer, true);
+      }
+      renderSelectedNames(outsideDisplayDiv, false);
+      updateHiddenInput();
+    }
+
+    /*
+     * Renders the selectedNames array into the given container.
+     * If isModal === true, we show them in the modal container.
+     * If isModal === false, we show them in the outside display.
+     */
+    function renderSelectedNames(container, isModal) {
+      container.innerHTML = '';
+      if (!selectedNames.length) {
+        if (isModal) {
+          container.innerHTML = '<span style="color:#666;">Selected speakers will appear here.</span>';
+        } else {
+          // Show a placeholder if no names selected outside
+          container.textContent = 'Click to add';
+        }
+        return;
+      }
+
+      // If container had placeholder text, clear it
+      container.textContent = '';
+    selectedNames.forEach(name => {
+        const span = document.createElement('span');
+        span.className = 'selected-name badge bg-primary p-2 me-2';
+
+        span.textContent = name;
+
+        const removeX = document.createElement('span');
+        removeX.className = 'ms-1 text-white fw-bold';
+        removeX.innerHTML = '&times;'; // Bootstrap-styled close icon
+        removeX.style.cursor = 'pointer';
+        removeX.style.marginLeft = '12px';
+        removeX.addEventListener('click', (e) => {
+            e.stopPropagation();
+            removeSelectedName(name);
+        });
+
+        span.appendChild(removeX);
+        container.appendChild(span);
+    });
+
+
+    }
+
+    // Update the hidden input (comma-separated list of selectedNames)
+    function updateHiddenInput() {
+      hiddenInput.value = selectedNames.join(', ');
+    }
+
+});
+</script>
+{% endblock %}
