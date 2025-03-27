@@ -378,6 +378,15 @@ input {
     cursor: pointer;
 }
 
+.text-btn {
+    background-color: rgba(0,0,0,0);
+    border: none;
+    color: var(--giga-blue);
+    cursor: pointer;
+    text-decoration: underline;
+    font-size: 14px;
+}
+
 #overlay {
     position: absolute;
     top: 0;
@@ -401,11 +410,12 @@ input {
     width: 600px;
     padding: 24px;
     box-sizing: border-box;
-    max-height: 600px;
+    max-height: 80vh;
     overflow-y: scroll;
 }
 
 #modal-header {
+    margin-top: 12px;
     flex-direction: column;
     text-align: left;
     margin-bottom: 24px;
@@ -416,31 +426,12 @@ input {
     width: 100%;
 }
 
-.speaker-verification {
-    border: 1px solid var(--border-blue);
-    padding: 20px;
-    border-radius: 10px;
-    margin-bottom: 16px;
+.flag {
+    border-left: 3px solid #F19101;
+    background-color: #FFE1B3;
+    padding: 6px 12px;
 }
 
-.speaker-excerpt {
-    text-align: left;
-    padding-left: 16px;
-    border-left: 3px solid var(--giga-blue);
-}
-
-.speaker-verification audio {
-    width: 100%;
-    margin-top: 16px;
-}
-
-.speaker-verification-btn-wrapper {
-    margin-top: 24px;
-    justify-content: space-between;
-    column-gap: 24px;
-}
-
-.speaker-verification-btn-wrapper button {
-    flex: 1;
-    padding: 16px 0px;
+.flag p {
+    font-size: 14px;
 }

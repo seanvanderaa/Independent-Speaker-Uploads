@@ -2,11 +2,20 @@
     <div class="modal">
         <div id="modal-header" class="align-left">
             <h4>Verify Speakers <span style="font-size: 14px; color: var(--giga-blue); font-weight: 400; margin-left: 8px;">X remaining</span></h4>
-            <p>Please assert that the model properly identified the selected speakers by listening to the recording and reading the extracted excerpt.</p>
+            <p>Please assert that the model properly identified the selected speakers by listening to the recording and reading the extracted excerpt. Only speakers who are identified and attached to a Parser profile will have their subjects and claims extracted.</p>
         </div>
         <!-- Loop here based on all of the ID'd speakers within the file -->
-        <div class="speaker-verification">
-            <p style="width: 100%; text-align: left; margin-top: 0px;"><b>Speaker Name - XX%</b></p>
+        <div class="speaker-verification" id="speaker-a">
+            <div class="speaker-ver-header">
+                <p style="width: 100%; text-align: left; margin: 0px;"><b>Speaker Name</b><span class="edit-speaker-trigger">Edit Speaker</span></p>
+                <p style="width: 100%; text-align: left;" class="speaker-byline">Speaking Time: XX% | Speaker ID Confidence: 50%</p>
+            </div>
+            <div class="speaker-ver-search align-left" style="display: none;">
+                <form class="speaker-ver-search-form " action="">
+                    <input type="text" placeholder="Type a speaker name..." class="searchbar">
+                </form>
+                <button class="text-btn" style="margin-left: 12px;">Cancel</button>
+            </div>
             <div class="speaker-excerpt">
                 <p>“And it will be enormous. We will not see anything like this. We haven't seen anything like this in our state's history in this next election cycle. But the swamp is deep. They want to. They want to continue the grift.”</p>
             </div>
@@ -15,15 +24,43 @@
                 Your browser does not support the audio element.
             </audio>
             <div class="speaker-verification-btn-wrapper align-center">
-                <button class="cancel-btn">Wrong, view all options</button>
-                <button class="proceed-btn">Confirm</button>
+                <!-- Need logic to handle these buttons. Incorrect should change the speaker name back to the original Speaker X label -->
+                 <!-- Correct should cause the proceed-btn to go into an "active" state -->
+                <button class="cancel-btn">Incorrect</button>
+                <button class="proceed-btn">Correct</button>
             </div>
         </div>
+        <!-- This should push to the next page -->
+        <p id="confirm-without-id">Continue Without Identifying Other Speakers</p>
+        <hr style="margin-top: 36px;">
+        <h4 style="text-align: left;">Unidentified Speakers</h4>
+        <div class="speaker-verification" id="speaker-a">
+            <div class="speaker-ver-header">
+                <p style="width: 100%; text-align: left; margin: 0px;"><b>Speaker Name</b><span class="edit-speaker-trigger">Edit Speaker</span></p>
+                <p style="width: 100%; text-align: left;" class="speaker-byline">Speaking Time: XX% | Speaker ID Confidence: 50%</p>
+            </div>
+            <div class="speaker-ver-search align-left" style="display: none;">
+                <form class="speaker-ver-search-form " action="">
+                    <input type="text" placeholder="Type a speaker name..." class="searchbar">
+                </form>
+                <button class="text-btn" style="margin-left: 12px;">Cancel</button>
+            </div>
+            <div class="speaker-excerpt">
+                <p>“And it will be enormous. We will not see anything like this. We haven't seen anything like this in our state's history in this next election cycle. But the swamp is deep. They want to. They want to continue the grift.”</p>
+            </div>
+            <audio controls>
+                <source src="{{ audio_file_url }}" type="audio/mpeg">
+                Your browser does not support the audio element.
+            </audio>
+            <div class="speaker-verification-btn-wrapper align-center">
+                <button class="cancel-btn">Incorrect</button>
+                <button class="proceed-btn">Correct</button>
+            </div>
+        </div>
+        <button id="confirm-with-id" class="confirm-speaker-id proceed-btn">Submit</button>
     </div>
 </div>
   
 <script>
-// We'll need to create a script that submits this form to reveal the page
-// Additionally, we'll need to add a step for if the "Wrong, view all options" button is pressed to show all of the options
-// See the slides for the UI for the "Wrong" route.
+
 </script>

@@ -50,11 +50,13 @@
           </div>
           {% endfor %}
         </div>
-        {% if public %}
-        <button id="view-source-btn" class="subtle-btn align-center"><i class="bi bi-arrow-up-right" style="margin-right: 8px"></i>View Source</button>
-        {% endif %}
       </div>
       <div id="summary-wrapper">
+          {% if flag %}
+            <div class="flag" style="margin: 12px 0px;">
+              <p><b>Notice:</b> This source has been flagged as having poor file quality or too many speakers. Double-check the model’s work before acting on any of its analysis.</p>
+            </div>
+          {% endif %}
           <p style="font-size: 14px; color: var(--subtle-text); margin: 0px; margin-top: 16px; margin-bottom: 8px;">Upload Date</p>
           <h3 style="margin: 0px;">{{ active_file }}</h3>
           <div class="summary-section">
@@ -70,7 +72,27 @@
       </div>
       {% for profile in profiles %}
       <div id="{{ profile.name }}" class="speaker-wrapper" style="display: none">
-        <button class="speaker-href subtle-btn align-center" href=""><i class="bi bi-arrow-up-right" style="margin-right: 8px"></i>View {{ profile.name }}'s Profile <span>{{ profile.sources }} sources, {{ profile.subjects }} subjects, {{ profile.claims }} claims</span></button>
+        <div class="speaker-profile align-left">
+          <div class="speaker-profile-header align-left">
+            <p style="color: black; font-size: 16px; font-weight: 500; text-align: left;">Greg Abbott<span style="margin-left: 12px; font-size: 14px; font-weight: 200;">{{ profile.sources }} sources, {{ profile.subjects }} subjects, {{ profile.claims }} claims</p>
+            <button class="subtle-btn"><i class="bi bi-arrow-up-right" style="margin-right: 8px;"></i>View Profile</button>
+          </div>
+          <p style="font-size: 14px; font-weight: 600; margin: 0px;">OTHER RECENT UPLOADS</p>
+          <div class="recent-uploads align-left">
+            <div class="recent-upload-wrapper">
+              <p class="recent-upload-title"><a href="">Greg Abbott - Trump, Vance want to make sure even more is being done to secure the border</a></p>
+              <p class="recent-upload-date">Mar 05, 2025</p>
+            </div>
+            <div class="recent-upload-wrapper">
+              <p class="recent-upload-title"><a href="">Greg Abbott - Trump, Vance want to make sure even more is being done to secure the border</a></p>
+              <p class="recent-upload-date">Mar 05, 2025</p>
+            </div>
+            <div class="recent-upload-wrapper">
+              <p class="recent-upload-title"><a href="">Greg Abbott - Trump, Vance want to make sure even more is being done to secure the border</a></p>
+              <p class="recent-upload-date">Mar 05, 2025</p>
+            </div>
+          </div>
+        </div>
         {% for subject in subjects %}
         <div class="subject-wrapper">
           <div class="subject-timestamps-wrapper">

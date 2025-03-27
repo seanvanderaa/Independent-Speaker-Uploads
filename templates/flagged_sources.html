@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- Meta tags for responsiveness -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+  
+  <!-- Bootstrap Icons -->
+  <link rel="stylesheet" href="/static/css/flagged_sources.css">
+  
+  <!-- Custom Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800&display=swap" rel="stylesheet">
+
+  <title>Flagged Sources [Admin]</title>
+  <link rel="shortcut icon" type="image/png" href="path/to/placeholder_icon.png">
+  
+</head>
+
+<body class="body-blue" style="background: linear-gradient(-210deg, #94C9EF, #FFFFFF); overflow-y: scroll; height: 100%;">
+  <div class="container-fluid min-vh-100 d-flex flex-column">
+    <div class="row flex-grow-1">
+      <div class="col-2"></div>
+      <div class="col-8" style="background-color: white; margin: 36px 0px; border-radius: 20px; padding: 40px;">
+        <h2>Flagged Sources</h2>
+        <p>Below are sources that have been flagged by users as having issues with either with the transcript or analysis. Once flagged, the claims and subjects extracted from the source are detached from the public database. If the issues are both valid and impactful to the quality of the analysis, click “Delete” to remove the file entirely. Clicking “Reattach” means that the extracted claims and subjects will revert back to being associated with the identified profiles. If you have questions, please get in touch with Sean.</p>
+        
+        <h4 style="padding-top: 32px; margin-bottom: 24px;">Pending</h4>
+        <!-- Static placeholder for a pending request -->
+        <div class="flagged-file">
+          <div class="flagged-header">
+            <p class="flagged-title">Lorem Ipsum Title Here</p>
+            <p class="flagged-source"><a href="{{ file.url }}">Original Source URL</a></p>
+            <p class="flagged-source"><a href="{{ file.p-url }}">Parser Source</a></p>
+          </div>
+          <div class="flagged-body">
+            <p class="small-header">User Comments</p>
+            <p class="user-comments">Lorem ipsum dolor sit amet consectetur. Fames in sed mi sed pharetra id lacus. Egestas sit urna nibh amet sapien condimentum augue.</p>
+          </div>
+          <div class="flagged-btn-wrapper">
+            <button class="delete-btn flagged-btn">Permanently Delete</button>
+            <button class="reattach-btn flagged-btn">Reattach</button>
+          </div>
+          <div class="flagged-result" style="display: none;">
+            <p id="flagged-result-text"><i></i></p>
+          </div>
+        </div>         
+        <hr style="margin-top: 48px"> 
+        
+        <h4 style="padding-top: 24px; margin-bottom: 24px;">Completed</h4>
+        <div class="flagged-file">
+          <div class="flagged-header">
+            <p class="flagged-title">Lorem Ipsum Title Here</p>
+            <p class="flagged-source"><a href="{{ file.url }}">Original Source URL</a></p>
+            <p class="flagged-source"><a href="{{ file.p-url }}">Parser Source</a></p>
+          </div>
+          <div class="flagged-body">
+            <p class="small-header">User Comments</p>
+            <p class="user-comments">Lorem ipsum dolor sit amet consectetur. Fames in sed mi sed pharetra id lacus. Egestas sit urna nibh amet sapien condimentum augue.</p>
+          </div>
+          <div class="flagged-btn-wrapper" style="display: none;">
+            <button class="delete-btn flagged-btn">Permanently Delete</button>
+            <button class="reattach-btn flagged-btn">Reattach</button>
+          </div>
+          <div class="flagged-result" style="display: block;">
+            <p id="flagged-result-text"><i>Source permanently deleted.</i></p>
+          </div>
+        </div>   
+
+      </div>
+      <div class="col-2"></div>
+    </div>
+  </div>
+  
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+  <script>
+    // Add event listeners to all buttons with the 'copy-btn' class
+
+  </script>
+</body>
+</html>

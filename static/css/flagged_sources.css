@@ -1,0 +1,65 @@
+.flagged-file {
+    border: 1px solid rgb(199, 199, 199);
+    border-radius: 5px;
+    padding: 16px;
+    padding-top: 16px;
+}
+
+.flagged-header {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    column-gap: 16px;
+    padding: 0px;
+}
+
+.flagged-title {
+    font-weight: 600;
+}
+
+.flagged-source a {
+    color: #0071BC;
+}
+
+.flagged-body {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+}
+
+.small-header {
+    margin: 0px;
+    font-size: 12px;
+    color: grey;
+}
+
+.flagged-btn-wrapper {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    column-gap: 16px;
+    margin-top: 16px;
+}
+
+.flagged-btn {
+    border-radius: 5px;
+    padding: 8px 16px;
+    border: none;
+    transition: background-color .2s ease, color .2s ease;
+}
+
+.delete-btn {
+    background-color: #0071bc;
+    color: white;
+}
+
+.delete-btn:hover {
+    background-color: #00558e;
+}
+
+.reattach-btn:hover {
+    background-color: rgb(149, 149, 149);
+}

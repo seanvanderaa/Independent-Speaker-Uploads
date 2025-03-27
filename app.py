@@ -110,7 +110,8 @@ def source_view():
                             subjects = subjects,
                             public=public,
                             speakers_verified = speakers_verified,
-                            active_file=active_file)
+                            active_file=active_file,
+                            flag=True)
     else:
         return render_template('iu_source.html',
                             partial_summary="partials/_source_summary.html",
@@ -120,7 +121,10 @@ def source_view():
                             subjects = subjects,
                             public=public,
                             speakers_verified = speakers_verified,
-                            active_file=active_file)
+                            active_file=active_file,
+                            flag=True)
+    
+    
 
 if __name__ == "__main__":
     app.run(debug=True)

@@ -51,6 +51,42 @@ document.addEventListener("DOMContentLoaded", function() {
         ["Another Speaker", 40],
         ["Someone Else", 40]
     ]);
+        // Handle "Edit Speaker" clicks
+        const editButtons = document.querySelectorAll('.edit-speaker-trigger');
+        editButtons.forEach(function(button) {
+            button.addEventListener('click', function(event) {
+                // Find the parent .speaker-verification container
+                const verificationDiv = event.target.closest('.speaker-verification');
+                if (verificationDiv) {
+                    // Hide the header and show the search section
+                    const header = verificationDiv.querySelector('.speaker-ver-header');
+                    const search = verificationDiv.querySelector('.speaker-ver-search');
+                    if (header && search) {
+                        header.style.display = 'none';
+                        search.style.display = 'flex';
+                    }
+                }
+            });
+        });
+    
+        // Handle "Cancel" clicks inside the speaker-ver-search section
+        // (Assuming the "Cancel" button inside .speaker-ver-search has the class "text-btn")
+        const cancelButtons = document.querySelectorAll('.speaker-ver-search .text-btn');
+        cancelButtons.forEach(function(button) {
+            button.addEventListener('click', function(event) {
+                // Find the parent .speaker-verification container
+                const verificationDiv = event.target.closest('.speaker-verification');
+                if (verificationDiv) {
+                    // Hide the search section and show the header again
+                    const header = verificationDiv.querySelector('.speaker-ver-header');
+                    const search = verificationDiv.querySelector('.speaker-ver-search');
+                    if (header && search) {
+                        search.style.display = 'none';
+                        header.style.display = 'block';
+                    }
+                }
+            });
+        });
   });
   
 
