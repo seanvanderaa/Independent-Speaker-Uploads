@@ -102,6 +102,7 @@ def source_view():
     public = True
     speakers_verified = True #Use this to toggle on/off the verify speaker popup modal
 
+    return render_template('iu_landing.html', partial='partials/_landing_failed_source.html')
     if speakers_verified:
         return render_template('iu_source.html',
                             partial_summary="partials/_source_summary.html",

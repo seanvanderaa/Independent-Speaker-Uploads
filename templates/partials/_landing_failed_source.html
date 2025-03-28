@@ -1,0 +1,19 @@
+{% extends "partials/_landing_partial_base.html" %}
+
+<!-- This either sends the user to the public or the private upload route -->
+
+{% block landing_content %}
+  <h3>Processing Failed for this Source</h3>
+  <p>It appears something broke while this source was being processed. Oftentimes, simply re-uploading the source and trying again will resolve the issue. <b>Use the button below to delete the source—only then will you be able to re-process it</b>. If the issue persists, however, please contact us at parsersupport@gigafact.org</p>
+  <button class="cancel-btn" id="delete-source-btn" style="width: 240px; margin-top: 24px;"><i class="bi bi-trash3" style="margin-right: 8px"></i>Delete Source</button>
+  <style>
+    .landing-container {
+        background-color: rgb(255, 228, 228);
+    }
+    .cancel-btn:hover {
+        border: 1px solid red;
+        background-color: #f2e6e3 !important;
+        transition: border .2s ease;
+    }
+  </style>
+{% endblock %}

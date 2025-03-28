@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Content Request Filled for {profile['name']}</title>
+</head>
+<body style="margin:0; padding:0;">
+  <table width="100%" cellpadding="0" cellspacing="0" border="0" bgcolor="#E6F5FF">
+    <tr>
+      <td align="center">
+        <table width="500" cellpadding="0" cellspacing="0" border="0" style="background-color:#ffffff; margin:20px 0; border-radius: 10px;">
+          <tr>
+            <td align="center" style="padding:20px;">
+              <img src="cid:parser_logo" alt="Company Logo" width="200" style="display:block;">
+            </td>
+          </tr>
+          <tr>
+            <td style="padding:20px; font-family:'Public Sans', Arial, sans-serif; font-size:18px; color:#333333;">
+              Hello!
+            </td>
+          </tr>
+          <tr>
+            <td style="padding:20px; padding-top: 0px; font-family:'Public Sans', Arial, sans-serif; font-size:18px; color:#333333;">
+              Your content upload request on Gigafact Parser has been processed.
+            </td>
+          </tr>
+          <tr>
+            <td style="font-family:'Public Sans', Arial, sans-serif; color: black; padding: 10px 20px; font-weight: 600; font-size: 18px;">
+              Source: {source['title']}
+            </td>
+          </tr>
+          <tr>
+            <td style="padding:20px; font-family:'Public Sans', Arial, sans-serif; font-size:18px; color:#333333;">
+              Here are the profiles we uncovered within this source:
+            </td>
+          </tr>
+
+          <!-- Loop through each person -->
+          {% for person in persons %}
+          <tr>
+            <td style="padding:20px; padding-bottom: 10px; font-family:'Public Sans', Arial, sans-serif; font-size:16px; color:#333333;">
+              {{ person.name }}
+            </td>
+          </tr>
+          <tr>
+            <td style="padding:0 20px 10px 20px; font-family:'Public Sans', Arial, sans-serif; font-size:14px; color:#3f3f3f;">
+              {{ person.num_claims }} claims, {{ person.num_subjects }} subjects
+            </td>
+          </tr>
+          <tr>
+            <td style="text-align: center; padding:10px 20px 10px 20px;">
+              <table cellspacing="0" cellpadding="0" style="margin: auto;" width="100%">
+                <tr>
+                  <td style="background-color: #0071BC; padding: 16px 20px; border-radius: 5px; text-align: center;">
+                    <a href="{{ person.link }}" target="_blank" style="font-family:'Public Sans', Arial, sans-serif; color: #ffffff; text-decoration: none;">View Analysis Here</a>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+          {% if not loop.last %}
+          <tr>
+            <td style="padding:0 20px;">
+              <hr style="border:none; border-bottom: 1px solid #ddd; margin:20px 0;">
+            </td>
+          </tr>
+          {% endif %}
+          {% endfor %}
+          <!-- End loop -->
+
+          <tr>
+            <td style="font-family:'Public Sans', Arial, sans-serif; font-size:14px; padding-top:12px; color:#000000; padding:8px 20px 0px 20px;">
+              Source Info:
+            </td>
+          </tr>
+          <tr>
+            <td style="font-family:'Public Sans', Arial, sans-serif; font-size:12px; padding-top:12px; color:#000000; padding:8px 20px 0px 20px;">
+              <a href="{source['url']}">{source['url']}</a>
+            </td>
+          </tr>
+          <tr>
+            <td style="font-family:'Public Sans', Arial, sans-serif; font-size:12px; padding-top:12px; color:#4f4f4f; padding:6px 20px 24px 20px;">
+              Source originally published on {source['published_at']}
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>
