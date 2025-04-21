@@ -52,6 +52,11 @@ def iu_process_upload():
     ### Take in the inputs from the form here. This is where we can process the file and begin the processing steps.
     return render_template("iu_landing.html", partial="partials/_landing_add.html")
 
+@app.route("/iu-view-uploads", methods=["GET","POST"])
+def iu_view_uploads():
+    ### Take in the inputs from the form here. This is where we can process the file and begin the processing steps.
+    return render_template("iu_landing.html", partial="partials/_landing_view_uploads.html")
+
 @app.route('/iu-source-view')
 def source_view():
     active_file = request.args.get('file', '')
@@ -102,7 +107,6 @@ def source_view():
     public = True
     speakers_verified = True #Use this to toggle on/off the verify speaker popup modal
 
-    return render_template('iu_landing.html', partial='partials/_landing_failed_source.html')
     if speakers_verified:
         return render_template('iu_source.html',
                             partial_summary="partials/_source_summary.html",

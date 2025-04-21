@@ -1,0 +1,454 @@
+<div class="align-center overlay">
+    <div class="spid-modal" id="speaker-id-modal" style="display: block;">
+      <div id="modal-header" class="align-left">
+        <h3 style="width: 100%; font-weight: 500; margin-top: 16px;">Verify Speakers</h3>
+        <p style="margin-top: 8px;">
+          Please confirm that the model properly identified the selected speakers by listening
+          to the recording and reading the extracted excerpt. Only speakers who are identified 
+          and attached to a Parser profile will have their subjects and claims extracted.
+        </p>
+      </div>
+      <h4 style="text-align: left; margin-bottom: 16px;">Identified Speakers</h4>
+      <div id="identified_speakers">
+        <!-- Loop here based on all of the ID'd speakers within the file -->
+        {% for label, out in uploaded_file.speaker2name.items %}
+        {% if out.name != '' %}
+        <div class="speaker-verification" id="speaker-{{ out.sid }}">
+          <div class="speaker-ver-header" id="header-{{ out.sid }}">
+            <input type="hidden" name="profile_id" value="{{ out.id }}" id="input-{{ out.sid }}">
+            <div class="align-left">
+              <p style="font-size: 20px; font-weight: 500; text-align: left; margin: 0px;" id="name-{{ out.sid }}">
+                {{ out.name }}
+              </p>
+            </div>
+          </div>
+          <div style="position: relative; width: 100%; display: none;" id="search-{{ out.sid }}">
+            <span style="position: absolute; top: 50%; left: 16px; transform: translateY(-50%); color: var(--blue);">
+              <i class="bi bi-search"></i>
+            </span>
+            <input type="text" id="profile-search-{{ out.sid }}" placeholder="Type a speaker name..." style="width: 100%; padding: 6px 10px 6px 42px; border: 1px solid #ccc; border-radius: 50px; font-size: 16px;">
+            <button class="text-btn" style="margin-left: 12px;" onclick="closeSearch('{{ out.sid }}')">Cancel</button>
+            <div class="results-wrapper" id="profile-results-{{ out.sid }}" style="width: 80%; position: absolute;"></div>
+          </div>
+          <div id="no-profile-match-{{ out.sid }}" class="row" style="display: none;">
+            <div style="text-align: left; font-size: 14px; color: red; padding-left: 12px; padding-top: 12px;font-weight: 500;">
+              <i>Person not found in our database.</i>
+            </div>
+          </div>
+          <p style="width: 100%; text-align: left; margin-top: 8px" class="speaker-byline">
+            Speaking Time: {{ out.speech_percent }}
+            <span id="speaker-confidence-{{ out.sid }}"> | Speaker ID Confidence: {{ out.confidence }}</span>
+          </p>
+          <div class="speaker-excerpt" style="margin-top: 20px;">
+            <p><i>"{{ out.transcript }}"</i></p>
+          </div>
+          <audio controls preload="auto" id="audioPlayer-{{ out.sid }}">
+            <source src="{{ out.url }}" id="playerSrc-{{ out.sid }}" type="audio/mpeg">
+            Your browser does not support the audio element.
+          </audio>
+          <div class="speaker-verification-btn-wrapper align-center">
+            <div style="width: 100%; justify-content: space-between; column-gap: 24px;" class="align-center" id="verify-speaker-div-{{ out.sid }}">
+              <button class="cancel-btn" id="incorrect-{{ out.sid }}" onclick="incorrect('{{ label }}', '{{ out.sid }}')">Incorrect</button>
+              <button class="proceed-btn" id="correct-{{ out.sid }}" onclick="correct('{{ label }}', '{{ out.sid }}')">Confirm</button>
+            </div>
+            <div style="width: 100%; display: none;" class="align-center" id="edit-speaker-div-{{ out.sid }}">
+              <button class="cancel-btn" id="reset-{{ out.sid }}" onclick="editSpeaker('{{ out.sid }}')">
+                Manually Identify Speaker
+              </button>
+            </div>
+            <div style="width: 100%; display: none;" class="align-center" id="reset-div-{{ out.sid }}">
+              <p style="margin: 0px;" class="speaker-cancel-text">Speaker confirmed. <span onclick="resetSpeaker('{{ label }}', '{{ out.sid }}')" style="color: var(--giga-blue); cursor: pointer;">Cancel?</span></p>
+            </div>
+          </div>
+        </div>
+        {% endif %}
+        {% empty %}
+        <div id="empty" style="text-align: left; background-color: rgb(255, 245, 227); color: rgb(160, 104, 0); padding: 16px; border-left: 3px solid orange; font-size: 14px; margin-top: 16px;">
+          <p style="margin: 0px;">No speakers have been identified in the transcript.</p>
+        </div>
+        {% endfor %}
+      </div>
+      <!-- This should push to the next page -->
+      <hr style="margin-top: 48px; margin-bottom: 36px">
+      <h4 style="text-align: left; margin-bottom: 12px;">Unidentified Speakers</h4>
+      <p style="margin-top: 0px; text-align: left; margin-bottom: 24px;">
+        Speakers will appear here if the model could not identify them, the person does not exist in our database,
+        or if you've marked a profile as incorrectly identified.
+      </p>
+      <div id="unidentified_speakers">
+        {% for label, out in uploaded_file.speaker2name.items %}
+        {% if out.name == '' %}
+        <div class="speaker-verification" id="speaker-{{ out.sid }}">
+          <div class="speaker-ver-header" id="header-{{ out.sid }}">
+            <input type="hidden" name="profile_id" value="{{ out.id }}" id="input-{{ out.sid }}">
+            <div class="align-left">
+              <p style="font-size: 20px; font-weight: 500; text-align: left; margin: 0px;" id="name-{{ out.sid }}">
+                Speaker {{ label }}
+              </p>
+            </div>
+          </div>
+          <div style="position: relative; width: 100%; display: none;" id="search-{{ out.sid }}">
+            <span style="position: absolute; top: 50%; left: 16px; transform: translateY(-50%); color: var(--blue);">
+              <i class="bi bi-search"></i>
+            </span>
+            <input type="text" id="profile-search-{{ out.sid }}" placeholder="Type a speaker name..."
+                   style="width: 100%; padding: 6px 10px 6px 42px; border: 1px solid #ccc; border-radius: 50px; font-size: 16px;">
+            <button class="text-btn" style="margin-left: 12px;" onclick="closeSearch('{{ out.sid }}')">Cancel</button>
+            <div class="results-wrapper" id="profile-results-{{ out.sid }}" style="width: 80%;"></div>
+          </div>
+          <div id="no-profile-match-{{ out.sid }}" class="row" style="display: none;">
+            <div style="text-align: left; font-size: 14px; color: red; padding-left: 12px; padding-top: 12px;font-weight: 500;">
+              <i>Person not found in our database.</i>
+            </div>
+          </div>
+          <p style="width: 100%; text-align: left; margin-top: 8px;" class="speaker-byline">
+            Speaking Time: {{ out.speech_percent }}
+          </p>
+          <div class="speaker-excerpt" style="margin-top: 20px;">
+            <p><i>"{{ out.transcript }}"</i></p>
+          </div>
+          <audio controls preload="auto" id="audioPlayer-{{ out.sid }}">
+            <source src="{{ out.url }}" id="playerSrc-{{ out.sid }}" type="audio/mpeg">
+            Your browser does not support the audio element.
+          </audio>
+          <div class="speaker-verification-btn-wrapper align-center">
+            <div style="width: 100%; display: none; justify-content: space-between; column-gap: 24px;" class="align-center" id="verify-speaker-div-{{ out.sid }}">
+              <button class="cancel-btn" id="incorrect-{{ out.sid }}" onclick="incorrect('{{ label }}', '{{ out.sid }}')">Incorrect</button>
+              <button class="proceed-btn" id="correct-{{ out.sid }}" onclick="correct('{{ label }}', '{{ out.sid }}')">Confirm</button>
+            </div>
+            <div style="width: 100%;" class="align-center" id="edit-speaker-div-{{ out.sid }}">
+              <button class="cancel-btn" id="reset-{{ out.sid }}" onclick="editSpeaker('{{ out.sid }}')">
+                Manually Identify Speaker
+              </button>
+            </div>
+            <div style="width: 100%; display: none;" class="align-center" id="reset-div-{{ out.sid }}">
+              <p style="margin: 0px;" class="speaker-cancel-text">Speaker confirmed. <span onclick="resetSpeaker('{{ label }}', '{{ out.sid }}')" style="color: var(--giga-blue); cursor: pointer;">Cancel?</span></p>
+            </div>
+          </div>
+        </div>
+        {% endif %}
+        {% empty %}
+        <div id="empty" style="text-align: left; background-color: rgb(255, 245, 227); color: rgb(160, 104, 0); padding: 16px; border-left: 3px solid orange; font-size: 14px; margin-top: 16px;">
+          <p style="margin: 0px;">All speakers have been identified in the transcript.</p>
+        </div>
+        {% endfor %}
+      </div>
+  
+      <!-- Disabled by default; text set dynamically via JS below -->
+      <button id="confirm-with-id" class="confirm-speaker-id proceed-btn" onclick="confirmSpeakers()" disabled>Submit Speaker Identification</button>
+    </div>
+  </div>
+  
+  <script>
+    var speaker2name =  '{{ uploaded_file.speaker2name_json|escapejs }}';
+    speaker2name = JSON.parse(speaker2name);
+    console.log(speaker2name);
+    const params = {};
+    const queryString = window.location.search;
+    const urlParams = new URLSearchParams(queryString);
+    
+    // Iterate through all key/value pairs
+    urlParams.forEach((value, key) => {
+      params[key] = value;
+    });
+  
+    console.log(params['f']);
+    let fid = params["f"]; 
+    let ids = []
+    let mapping = {}
+  
+    for (let label in speaker2name) {
+      let out = speaker2name[label];
+      let player_id = "audioPlayer-" + out.sid;
+      let audioPlayer = document.getElementById(player_id);
+      let startTime = out.start;
+      let endTime = out.end;
+  
+      ids.push(out.sid);
+      mapping[label] = {
+        "name": out.name,
+        "correct": false,
+        "id": out.id,
+        "sid": out.sid
+      };
+  
+      audioPlayer.addEventListener('loadedmetadata', function() {
+        audioPlayer.currentTime = startTime;
+      });
+  
+      audioPlayer.addEventListener('timeupdate', () => {
+        if (audioPlayer.currentTime >= endTime) {
+          audioPlayer.pause();
+          audioPlayer.currentTime = startTime;
+        }
+      });
+    }
+  
+    function findLabelBySid(sid) {
+      for (let label in speaker2name) {
+        if (speaker2name[label].sid == sid) {
+          return label;
+        }
+      }
+      return null;
+    }
+  
+    function doesPidExist(pid) {
+      for (let label in mapping) {
+        if (mapping[label].id == pid) {
+          return true;
+        }
+      } 
+      return false; 
+    }
+     
+    function createProfileCard(cardData, sid) {
+      var cardDiv = document.createElement('div');
+      cardDiv.className = 'ind-result';
+      cardDiv.style.cursor = 'pointer';
+      cardDiv.style.position = 'relative';
+  
+      cardDiv.addEventListener('click', function() {
+        const ecards = document.querySelectorAll('.ind-result');
+        ecards.forEach(card => card.remove());
+  
+        document.getElementById("header-" + sid).style.display = 'block';
+        document.getElementById("search-" + sid).style.display = 'none';
+        document.getElementById("no-profile-match-" + sid).style.display = 'none';
+      
+        if (doesPidExist(cardData.id)) { 
+          alert(`${cardData.name} has already been identified as a Speaker!`);
+        } else {
+          document.getElementById("name-" + sid).textContent = cardData.name;
+          document.getElementById("input-" + sid).value = cardData.id;
+  
+          let label = findLabelBySid(sid);
+          if (label) {
+            if (!mapping[label].name) {
+              const idSpeakerDiv = document.getElementById('speaker-' + sid);
+              const newParentDiv = document.getElementById('identified_speakers');
+              if (idSpeakerDiv.parentNode) {
+                idSpeakerDiv.parentNode.removeChild(idSpeakerDiv);
+              }
+              newParentDiv.appendChild(idSpeakerDiv);
+            }
+            mapping[label].name = cardData.name;
+            mapping[label].id = cardData.id;
+            console.log(mapping);
+          }
+  
+          const verifyDiv = document.getElementById("verify-speaker-div-" + sid);
+          if (verifyDiv) {
+            verifyDiv.style.display = 'flex';
+          }
+          document.getElementById("edit-speaker-div-" + sid).style.display = 'none';
+          updateSubmitButton();
+        }
+      });
+  
+      var h3 = document.createElement('h3');
+      h3.textContent = cardData.name;
+      cardDiv.appendChild(h3);
+  
+      return cardDiv;
+    }
+  
+    function editSpeaker(id) {
+      console.log(id);
+      document.getElementById("header-" + id).style.display = 'none';
+      document.getElementById("search-" + id).style.display = 'flex';
+      document.getElementById('profile-search-' + id).value = '';
+  
+      document.getElementById('profile-search-' + id).addEventListener('input', function() {
+        const query = this.value;
+        const cards = document.querySelectorAll('.ind-result');
+        cards.forEach(card => {
+          card.remove();
+        }); 
+        console.log(query);
+        if (query.length == 0) {
+          const ecards = document.querySelectorAll('.ind-result');
+          ecards.forEach(card => {
+            card.remove();
+          });   
+          document.getElementById('no-profile-match-' + id).style.display = "none"; 
+          document.getElementById('profile-results-' + id).style.display = "none";
+        } else if (query.length < 2) {
+          const ecards = document.querySelectorAll('.ind-result');
+          ecards.forEach(card => {
+            card.remove();
+          });
+          document.getElementById('no-profile-match-' + id).style.display = "none"; 
+        } else if (query.length >= 2) {
+          fetch(`/source_view/?profile=${query}`)
+          .then(response => response.json())
+          .then(data => {
+            const ecards = document.querySelectorAll('.ind-result');
+            ecards.forEach(card => {
+              card.remove();
+            });  
+            if (data.length === 0) {
+              document.getElementById('no-profile-match-' + id).style.display = "block";      
+            } else {
+              const cards = data.map(cardData => createProfileCard(cardData, id)); //data.map(createProfileCard);
+              const container = document.getElementById('profile-results-' + id);
+              console.log(cards.length);
+              for (let i = 0; i < cards.length; i++) {
+                document.getElementById('profile-results-' + id).style.display = "block";
+                const profile = cards[i].querySelector('h3').textContent;
+                console.log(profile);
+                container.appendChild(cards[i]);
+              }    
+              if (cards.length > 2) {
+                mt = 50 + 20 + (cards.length - 3)*40;
+                const marginValue = `${mt}px`;
+              }
+              document.getElementById('no-profile-match-' + id).style.display = "none"; 
+            }
+          })
+          .catch(error => console.error('Error:', error));
+        } else {
+          const ecards = document.querySelectorAll('.ind-result');
+          ecards.forEach(card => {
+            card.remove();
+          }); 
+        }
+      });
+    }
+  
+    function closeSearch(id) {
+      document.getElementById("header-" + id).style.display = 'block';
+      document.getElementById("search-" + id).style.display = 'none';
+      document.getElementById("no-profile-match-" + id).style.display = 'none';
+    }
+  
+    function correct(label, id) {
+      let name = document.getElementById("name-" + id).textContent;
+      if (mapping[label]["name"] == '' && name != '') {
+        mapping[label]["name"] = name.trim();
+        const idSpeakerDiv = document.getElementById('speaker-' + id);
+        const newParentDiv = document.getElementById('identified_speakers');
+        if (idSpeakerDiv.parentNode) {
+          idSpeakerDiv.parentNode.removeChild(idSpeakerDiv);
+        }
+        newParentDiv.appendChild(idSpeakerDiv);
+        let pid = document.getElementById('input-' + id).value;
+        mapping[label]["id"] = pid;
+      } else if (mapping[label]["name"] != name) {
+        mapping[label]["name"] = name.trim();
+        let pid = document.getElementById('input-' + id).value;
+        mapping[label]["id"] = pid;
+      }
+  
+      mapping[label]["correct"] = true;
+  
+      const containerDiv = document.getElementById('speaker-' + id);
+      containerDiv.classList.add('disabled');
+  
+      document.getElementById('incorrect-' + id).disabled = true;
+      document.getElementById('correct-' + id).disabled = true;
+  
+      document.getElementById('verify-speaker-div-' + id).style.display = "none";
+      document.getElementById('edit-speaker-div-' + id).style.display = "none";
+  
+      document.getElementById('reset-div-' + id).style.display = 'inline-block';
+  
+      updateSubmitButton();
+    }
+  
+    function resetSpeaker(label, id) {
+      const containerDiv = document.getElementById('speaker-' + id);
+      containerDiv.classList.remove('disabled');
+  
+      document.getElementById('incorrect-' + id).disabled = false;
+      document.getElementById('correct-' + id).disabled = false;
+  
+      document.getElementById('verify-speaker-div-' + id).style.display = "flex";
+      document.getElementById('edit-speaker-div-' + id).style.display = "none";
+      document.getElementById('reset-div-' + id).style.display = 'none';
+  
+      mapping[label]["correct"] = false;
+  
+      updateSubmitButton();
+    }
+  
+    function incorrect(label, id) {
+      mapping[label]["name"] = '';
+      const idSpeakerDiv = document.getElementById('speaker-' + id);
+      const newParentDiv = document.getElementById('unidentified_speakers');
+  
+      if (idSpeakerDiv.parentNode) {
+        idSpeakerDiv.parentNode.removeChild(idSpeakerDiv);
+      }
+      newParentDiv.appendChild(idSpeakerDiv);
+  
+      document.getElementById("name-" + id).textContent = 'Speaker ' + label;
+      document.getElementById('input-' + id).value = '';
+      mapping[label]["id"] = '';
+      mapping[label]["correct"] = false;
+  
+      document.getElementById('verify-speaker-div-' + id).style.display = "none";
+      let confidenceSpan = document.getElementById('speaker-confidence-' + id);
+      if (confidenceSpan) {
+        confidenceSpan.style.display = "none";
+      }
+      document.getElementById('edit-speaker-div-' + id).style.display = "flex";
+  
+      updateSubmitButton();
+    }
+  
+    function updateSubmitButton() {
+      let identifiedSpeakerDivs = document.querySelectorAll("#identified_speakers .speaker-verification");
+      let stillNeeded = 0;
+  
+      identifiedSpeakerDivs.forEach(div => {
+        if (!div.classList.contains('disabled')) {
+          stillNeeded++;
+        }
+      });
+  
+      const btn = document.getElementById("confirm-with-id");
+      if (stillNeeded === 0) {
+        btn.disabled = false;
+        btn.innerText = "Submit Speaker Identification";
+      } else {
+        btn.disabled = true;
+        btn.innerText = `Confirm ${stillNeeded} Speaker(s) To Submit`;
+      }
+    }
+  
+    document.addEventListener('DOMContentLoaded', function() {
+      updateSubmitButton();
+    });
+  
+    function confirmSpeakers() {
+      console.log(mapping);
+      let form = document.createElement("form");
+      form.method = "POST";
+      form.action = "";
+      form.style.display = "none";
+  
+      let csrfTokenInput = document.createElement("input");
+      csrfTokenInput.type = "hidden";
+      csrfTokenInput.name = "csrfmiddlewaretoken";
+      csrfTokenInput.value = "{{ csrf_token }}";
+      form.appendChild(csrfTokenInput);
+  
+      function addHiddenInput(name, value) {
+        let input = document.createElement("input");
+        input.type = "hidden";
+        input.name = name;
+        input.value = value;
+        form.appendChild(input);
+      }
+  
+      addHiddenInput("mapping", JSON.stringify(mapping));
+      addHiddenInput("fid", JSON.stringify(fid));
+      addHiddenInput("action", "confirm_speakers");
+  
+      document.body.appendChild(form);
+      form.submit();
+    }
+  
+  </script>
+  

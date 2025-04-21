@@ -256,3 +256,99 @@
 .speakers-display:hover {
     background-color: #f9f9f9;
 }
+
+/* ADDING NEW BELOW HERE */
+
+#view-upload-header {
+    flex-direction: row;
+    justify-content: space-between;
+    width: 100%;
+    column-gap: 48px;
+}
+
+#search-form {
+    flex: 1;
+    position: relative;
+}
+
+#search-input {
+    width: 100%;
+    padding: 8px 12px;
+    padding-left: 36px;
+    border-radius: 5px;
+    border: 1px solid darkgrey;
+    color: black;
+    box-sizing: border-box;
+}
+
+#sw-wrapper {
+    flex-direction: column;
+    margin-top: 24px;
+    row-gap: 16px;
+    max-height: 100%;
+    overflow-y: scroll;
+    padding-bottom: 24px;
+}
+
+.sw {
+    width: 100%;
+    text-align: left;
+    padding: 6px 16px;
+    border-radius: 0px 5px 5px 0px;
+    border-left: 3px solid rgb(181, 181, 181);
+    box-sizing: border-box;
+    transition: border .2s ease, box-shadow .2s ease, background-color .2s ease;
+}
+
+.sw:hover {
+    border-left: 3px solid var(--giga-blue);
+    cursor: pointer;
+    box-shadow: 4px 4px 10px 0px rgba(0,0,0,0.1);
+    background-color: #f3faffa0;
+}
+
+.sw-header {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    column-gap: 24px;
+}
+
+.sw-header h4 {
+    flex: 1;
+    font-size: 16px;
+    margin: 0px;
+}
+
+.sw-date {
+    font-size: 14px;
+    color: var(--d-blue);
+    margin: 0px;
+}
+
+.sw-individual {
+    font-size: 14px;
+    margin-top: 6px;
+    margin-bottom: 8px;
+    color: #385f7a;
+}
+
+.sw-excerpt {
+    margin-top: 0px;
+    margin-bottom: 0px;
+    display: -webkit-box;
+    /* establish vertical orientation */
+    -webkit-box-orient: vertical;
+    /* clamp to 3 lines */
+    -webkit-line-clamp: 3;
+  
+    /* fallback for non‑WebKit browsers */
+    overflow: hidden;
+    /* show “…” at the end */
+    text-overflow: ellipsis;
+    
+    /* (optional) control line-height if you need precise spacing */
+    /* line-height: 1.4em; */
+    /* max-height: calc(1.4em * 3); */
+}
