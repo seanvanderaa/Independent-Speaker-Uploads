@@ -12,7 +12,7 @@ STATES = [
 ]
 
 PROFILES = {
-    "American Samoa": [
+    "National": [
         {"name": "Matt Gaetz",       "office": "Attorney General"},
         {"name": "Tammy Baldwin",    "office": "Senator"},
         {"name": "Eric Hovde",       "office": "Former Senate Candidate"},

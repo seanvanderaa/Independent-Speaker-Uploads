@@ -57,12 +57,16 @@
                 console.log("Here1");
                 renderStateCards();
                 console.log("Here2");
+                geoPane.classList.remove('fade-in');
 
                 geoPane.classList.add('fade-out');
+                console.log("Here3");
                 geoPane.addEventListener('animationend', () => {
                     geoPane.style.display = 'none';
+                    console.log("Here4");
                     profilePane.classList.remove('hidden');
                     profilePane.classList.add('fade-in');
+                    profilePane.style.display = "flex";
                 }, { once:true });
             });
 
@@ -86,8 +90,7 @@
                     /* header */
                     card.innerHTML = `
                         <header>
-                          <h4>${state}</h4>
-                          <button type="button" class="fav-all">Favorite All Profiles in this Region</button>
+                          <h4>${state}<span class="fav-all" style="margin-left: 8px; font-size: 14px;">Favorite All</span></h4>
                         </header>
                         <ul class="profiles"></ul>
                         <button type="button" class="expand-btn">
@@ -102,8 +105,8 @@
                           <label>
                             <input type="checkbox" class="profile-cb"
                                    data-state="${state}" data-name="${p.name}">
-                            <span class="name">${p.name}</span>
-                            <span class="office">${p.office}</span>
+                            <span class="name" style="flex: 1">${p.name}</span>
+                            <span class="office" style="flex: 2">${p.office}</span>
                           </label>`;
                         list.appendChild(li);
                     });
@@ -198,7 +201,7 @@
         <div class="profile-wrapper">
 
             <h3>Favorite the profiles that you’re interested in.</h3>
-            <p class="helper">
+            <p class="helper" style="max-width: 550px;">
                 We’ve sorted them by state to make it easier to know which to favorite. You can
                 also select all of the profiles in a state!
             </p>
@@ -208,7 +211,6 @@
             <input type="hidden" name="selected_profiles" id="selected-profiles">
 
             <button class="primary-btn submit">Submit &amp; Enter Parser</button>
-            <button type="button" class="back">Back</button>
         </div>
     </section>
 </body>
