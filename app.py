@@ -1,4 +1,5 @@
 from flask import Flask, request, render_template
+from data import STATES, PROFILES 
 
 app = Flask(__name__)
 
@@ -36,6 +37,10 @@ def index():
 def landing_path():
     # Route to select private/public upload
     return render_template("iu_landing.html", partial="partials/_landing_path.html")
+
+@app.route("/welcome")
+def welcome():
+    return render_template("welcome.html", STATES=STATES, PROFILES=PROFILES)
 
 @app.route("/iu-source/add/pub")
 def landing_source_add_pub():

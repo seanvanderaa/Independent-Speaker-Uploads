@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Welcome to Gigafact Parser</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/welcome.css') }}"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
+
+    <script defer>
+        document.addEventListener('DOMContentLoaded', () => {
+            /* ────────────────────────── References ───────────────────────── */
+            const introPane   = document.getElementById('intro-pane');
+            const geoPane     = document.getElementById('geo-pane');
+            const profilePane = document.getElementById('profile-pane');
+
+            const startBtn    = document.getElementById('get-started');
+            const continueBtn = document.querySelector('.continue');
+            const submitBtn   = document.querySelector('.submit');
+
+            const stateGrid           = document.querySelector('.state-grid');
+            const selectedStatesField = document.getElementById('selected-states');
+            const selectedStates      = new Set();
+
+            const stateCardsWrapper   = document.getElementById('state-cards');
+
+            /* ─────────────────── Page-1 → Page-2 (intro → geo) ───────────── */
+            startBtn.addEventListener('click', () => {
+                const modal = document.querySelector('#intro-pane .modal');
+                modal.classList.add('fade-out');
+                modal.addEventListener('animationend', () => {
+                    introPane.style.display = 'none';
+                    geoPane.classList.remove('hidden');
+                    geoPane.classList.add('fade-in');
+                }, { once:true });
+            });
+
+            /* ───────────────────── State-button toggle logic ─────────────── */
+            stateGrid.addEventListener('click', e => {
+                const btn = e.target.closest('.state-btn');
+                if (!btn) return;
+                btn.classList.toggle('selected');
+                const state = btn.dataset.state;
+
+                btn.classList.contains('selected')
+                    ? selectedStates.add(state)
+                    : selectedStates.delete(state);
+
+                selectedStatesField.value = [...selectedStates].join(',');
+            });
+
+            /* ───────────────── Page-2 → Page-3 (geo → profiles) ──────────── */
+            continueBtn.addEventListener('click', () => {
+                if (!selectedStates.size) return alert('Pick at least one state 😊');
+
+                /* build state-cards on the fly */
+                console.log("Here1");
+                renderStateCards();
+                console.log("Here2");
+
+                geoPane.classList.add('fade-out');
+                geoPane.addEventListener('animationend', () => {
+                    geoPane.style.display = 'none';
+                    profilePane.classList.remove('hidden');
+                    profilePane.classList.add('fade-in');
+                }, { once:true });
+            });
+
+            /* ─────────────── Build the per-state cards dynamically ───────── */
+            const profilesData = {{ PROFILES|tojson }};  /* ⇦ Jinja/Flask */
+            console.log(profilesData);
+
+            function renderStateCards(){
+                stateCardsWrapper.innerHTML = '';               // clear old
+                const frag = document.createDocumentFragment();
+
+                selectedStates.forEach(state => {
+                    const profiles = profilesData[state] || [];
+                    if (!profiles.length) return;
+
+                    /* card container */
+                    const card = document.createElement('section');
+                    card.className = 'state-card collapsed';
+                    card.dataset.state = state;
+
+                    /* header */
+                    card.innerHTML = `
+                        <header>
+                          <h4>${state}</h4>
+                          <button type="button" class="fav-all">Favorite All Profiles in this Region</button>
+                        </header>
+                        <ul class="profiles"></ul>
+                        <button type="button" class="expand-btn">
+                            <i class="bi bi-chevron-down"></i>
+                        </button>`;
+
+                    /* list of profiles */
+                    const list = card.querySelector('.profiles');
+                    profiles.forEach(p=>{
+                        const li = document.createElement('li');
+                        li.innerHTML = `
+                          <label>
+                            <input type="checkbox" class="profile-cb"
+                                   data-state="${state}" data-name="${p.name}">
+                            <span class="name">${p.name}</span>
+                            <span class="office">${p.office}</span>
+                          </label>`;
+                        list.appendChild(li);
+                    });
+
+                    /* interactions */
+                    card.querySelector('.expand-btn')
+                        .addEventListener('click',()=>
+                            card.classList.toggle('collapsed'));
+
+                    card.querySelector('.fav-all')
+                        .addEventListener('click',()=>{
+                            list.querySelectorAll('.profile-cb').forEach(cb=>{
+                                cb.checked = true;
+                                selectedProfiles.add(cb.dataset.name);
+                            });
+                            syncProfilesField();
+                        });
+
+                    frag.appendChild(card);
+                });
+                stateCardsWrapper.appendChild(frag);
+            }
+
+            /* ──────────── Profile-selection bookkeeping ───────────── */
+            const selectedProfiles     = new Set();
+            const selectedProfilesField= document.getElementById('selected-profiles');
+
+            stateCardsWrapper.addEventListener('change', e=>{
+                if (!e.target.matches('.profile-cb')) return;
+                const { name } = e.target.dataset;
+
+                e.target.checked
+                    ? selectedProfiles.add(name)
+                    : selectedProfiles.delete(name);
+
+                syncProfilesField();
+            });
+
+            function syncProfilesField(){
+                selectedProfilesField.value = [...selectedProfiles].join(',');
+            }
+
+            /* ───── Submit – you can POST normally or fetch-AJAX here ───── */
+            submitBtn.addEventListener('click',()=>{
+                console.log('Chosen states:', [...selectedStates]);
+                console.log('Chosen profiles:', [...selectedProfiles]);
+                // place your real submission here
+            });
+        });
+    </script>
+</head>
+<body>
+    <!-- ─────────────────────────── STEP 1 ─────────────────────────── -->
+    <section id="intro-pane" class="pane">
+        <div class="modal">
+            <p class="welcome">Welcome To</p>
+            <h1>Gigafact Parser</h1>
+            <p class="tagline">
+                Let’s add some favorite profiles to help<br>
+                personalize your experience on the platform.
+            </p>
+            <button id="get-started" class="primary-btn">Get Started</button>
+        </div>
+    </section>
+
+    <!-- ─────────────────────────── STEP 2 ─────────────────────────── -->
+    <section id="geo-pane" class="pane hidden">
+        <div class="geo-wrapper">
+            <h3>What geographies are relevant to you?</h3>
+            <p class="helper" style="max-width: 550px;">
+                Select the locations that you are interested in. Next, we’ll show you the
+                profiles on Parser that are available for you to favorite.
+            </p>
+
+            <div class="state-grid">
+                {% for state in STATES %}
+                    <button type="button" class="state-btn" id="{{ state }}-btn" data-state="{{ state }}">
+                        {{ state }} <i class="bi bi-check-circle check-icon"></i>
+                    </button>
+                {% endfor %}
+            </div>
+
+            <input type="hidden" name="selected_states" id="selected-states">
+
+            <button class="primary-btn continue">Continue</button>
+            <p class="note">You can always update your favorites in settings!</p>
+        </div>
+    </section>
+
+    <!-- ─────────────────────────── STEP 3 ─────────────────────────── -->
+    <section id="profile-pane" class="pane hidden">
+        <div class="profile-wrapper">
+
+            <h3>Favorite the profiles that you’re interested in.</h3>
+            <p class="helper">
+                We’ve sorted them by state to make it easier to know which to favorite. You can
+                also select all of the profiles in a state!
+            </p>
+
+            <div id="state-cards"></div>
+
+            <input type="hidden" name="selected_profiles" id="selected-profiles">
+
+            <button class="primary-btn submit">Submit &amp; Enter Parser</button>
+            <button type="button" class="back">Back</button>
+        </div>
+    </section>
+</body>
+</html>

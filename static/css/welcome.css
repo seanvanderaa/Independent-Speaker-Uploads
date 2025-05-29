@@ -1,0 +1,175 @@
+@import url('https://fonts.googleapis.com/css2?family=Public+Sans:ital,wght@0,100..900;1,100..900&display=swap');
+
+:root {
+    --h1: 36px;
+    --h2: 32px;
+    --h3: 24px;
+    --h4: 20px;
+    --p: 16px;
+    --ff: 'Public Sans', sans-serif;
+    --giga-blue: #0071BC;
+    --l-blue: #E8F3FB;
+    --m-blue: #C3E1F5;
+    --d-blue: #012843;
+    --h-orange: #A86500;
+    --h-blue: #66C2FF;
+    --h-green: #9FC9A6;
+    --subtle-blue: #385f7a;
+    --light-blue-background: #E5F1FA;
+    --border-grey: #B4B4B4;
+    --border-blue: #95B7D1;
+    --active-blue: #1D4F72;
+    --brand-blue: #003456;
+    --surface    : #ffffff;
+    --text-900   : #002c46;
+    --text-600   : #475569;
+    --border     : #cbd5e1;
+}
+
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;font-family:var(--ff),system-ui,-apple-system,sans-serif}
+body {
+    background:linear-gradient(120deg,#f8dfb8 0%,#c1d8e8 100%);
+    background-attachment: fixed; 
+}
+
+/* ─────────────────────── Shared Pane Styling ────────────────────── */
+.pane{
+    display:flex;
+    align-items:flex-start;
+    justify-content:center;
+
+    animation:bg-reveal 1.2s ease forwards;
+}
+
+/* ────────────────────────── Intro Modal ─────────────────────────── */
+.modal{text-align:center;max-width:640px}
+
+#intro-pane {
+    height: 100vh;
+    align-items: center;
+}
+
+.welcome{margin:.25rem 0 .5rem;font-size:1rem;color:var(--text-600);font-weight:500}
+h1{margin:0;font-size:2.5rem;color:var(--text-900)}
+.tagline{margin:1.25rem 0 2rem;font-size:.9rem;color:var(--text-600);line-height:1.45}
+
+.primary-btn{
+    appearance:none;border:0;cursor:pointer;
+    background:var(--brand-blue);color:#fff;
+    font-size:1rem;padding:.75rem 2.5rem;border-radius:4px;
+    transition:background-color .2s ease, color .2s ease;
+    font-weight: 500;
+    font-family: var(--ff);
+}
+.primary-btn:hover{
+    background-color: #F19101;
+    color: black;
+}
+
+/* fade-out for the modal, fade-in for the geography pane */
+.fade-out{animation:fadeOut .45s forwards}
+@keyframes fadeOut{to{opacity:0}}
+.fade-in{animation:fadeIn  .45s forwards}
+@keyframes fadeIn{from{opacity:0} to{opacity:1}}
+.hidden{display:none}
+
+/* ──────────────────── Geography Selection Pane ─────────────────── */
+.geo-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align:center;
+    padding:2rem;
+    max-width:960px;
+    width:100%
+}
+.geo-wrapper h2{margin:0 0 .4rem;font-size:1.75rem;color:var(--text-900)}
+.helper{margin:0 0 2rem;font-size:.9rem;color:var(--text-600)}
+
+.state-grid {
+  display: grid;
+  /* 3 columns of fixed 220px */
+  grid-template-columns: repeat(3, 220px);
+  /* exactly 17 rows of auto-height */
+  grid-template-rows: repeat(17, auto);
+  gap: 12px;
+  justify-items: center;
+  
+  /* ⇢ fill each column top→bottom, then move to the next */
+  grid-auto-flow: column;
+  max-width: 700px;
+}
+
+
+.state-btn{
+    min-width:90px;
+    font-weight: 500;
+    padding:.8rem 1.2rem;
+    width: 200px;
+    font-size:.85rem;
+    border: 2px solid white;
+    border-radius:5px;
+    font-family: var(--ff);
+    text-align: left;
+    background:#fff;
+    cursor:pointer;
+    transition:background-color .2s,border .2s, box-shadow .2s ease;
+}
+
+.state-btn:hover{
+    background-color:#f1f5f9;
+    border: 2px solid #f1f5f9;
+}
+.state-btn:focus-visible,
+.state-btn.selected{
+    border: 2px solid var(--giga-blue);
+    background-color: #ebf4fd;
+    box-shadow: 4px 4px 10px 0px rgba(0,0,0,0.1);
+}
+
+.check-icon{
+    opacity:0;                    /* invisible by default              */
+    margin-left:4px;
+    transition:opacity .25s ease, /* smooth fade                       */
+               transform .25s ease;
+    transform:scale(.8);          /* start slightly smaller            */
+    color:var(--giga-blue);
+}
+
+.state-btn.selected .check-icon{
+    opacity:1;                    /* fade in when button is selected   */
+    transform:scale(1);           /* pop to full size                  */
+}
+
+
+.continue{margin-top:4rem}
+.note{margin-top:.75rem;font-size:.75rem;color:var(--text-600)}
+
+.state-card{
+  background:#fff;border:1px solid var(--grey-300);border-radius:var(--radius);
+  margin-bottom:1.5rem;overflow:hidden;transition:max-height .3s ease;
+  max-height:230px;            /* collapsed height */
+}
+.state-card.collapsed .profiles{overflow:hidden}
+.state-card.expanded{max-height:2000px}   /* big enough */
+.state-card header{
+  display:flex;justify-content:space-between;align-items:center;
+  background:#fff;border-bottom:1px solid var(--grey-300);padding:.75rem 1rem;
+}
+.state-card h4{font-size:1rem;font-weight:600;color:#002c46}
+.state-card .fav-all{
+  background:none;border:0;color:#2563eb;cursor:pointer;font-size:.8rem;
+}
+.profiles{list-style:none;padding:0;margin:0}
+.profiles li:nth-child(odd){background:var(--grey-100)}
+.profiles label{
+  display:grid;grid-template-columns:24px 1fr 1fr;align-items:center;
+  padding:.5rem 1rem;font-size:.85rem;gap:.5rem;cursor:pointer;
+}
+.office{text-align:right;color:var(--grey-700)}
+.expand-btn{
+  width:100%;border:0;background:#e2e8f0;padding:.3rem 0;cursor:pointer;
+}
+.expand-btn i{font-size:1.2rem;color:var(--grey-700)}
